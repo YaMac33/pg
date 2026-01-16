@@ -4,38 +4,77 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Sidenote</title>
-  <meta name="description" content="仕組み化・自動化・学びの記録（新着＋ジャンル/カテゴリ導線）" />
+  <meta name="description" content="仕組み化・自動化・学びの記録" />
 
-  <!-- 任意: 共通CSS -->
   <link rel="stylesheet" href="./assets/style.css" />
 
-  <!-- 最小スタイル（CSSを後で整える前提。不要なら削除OK） -->
   <style>
     :root { color-scheme: light dark; }
-    body { margin: 0; font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans JP", sans-serif; }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans JP", sans-serif;
+    }
     a { color: inherit; }
-    .wrap { max-width: 960px; margin: 0 auto; padding: 24px 16px 48px; }
-    header { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 18px; }
-    h1 { margin: 0; font-size: 22px; }
-    .muted { opacity: .75; font-size: 13px; }
-    .grid { display: grid; gap: 18px; grid-template-columns: 1fr; }
-    @media (min-width: 900px){ .grid { grid-template-columns: 1.2fr .8fr; } }
-    section { border: 1px solid rgba(127,127,127,.25); border-radius: 12px; padding: 16px; }
-    h2 { margin: 0 0 10px; font-size: 16px; }
-    ul { margin: 0; padding-left: 18px; }
-    li { margin: 8px 0; }
-    .list a { text-decoration: none; }
-    .list a:hover { text-decoration: underline; }
-    .pillbox { display: flex; flex-wrap: wrap; gap: 8px; }
-    .pill {
-      display: inline-flex; align-items: center; gap: 6px;
-      padding: 8px 10px; border-radius: 999px;
-      border: 1px solid rgba(127,127,127,.25); text-decoration: none;
+    .wrap {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 24px 16px 48px;
+    }
+    header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+    h1 {
+      margin: 0;
+      font-size: 22px;
+    }
+    h2 {
+      margin: 0 0 10px;
+      font-size: 16px;
+    }
+    .muted {
+      opacity: .75;
       font-size: 13px;
     }
-    .pill:hover { border-color: rgba(127,127,127,.55); }
-    footer { margin-top: 18px; opacity: .75; font-size: 12px; }
-    .error { color: #b00020; }
+    .grid {
+      display: grid;
+      gap: 18px;
+      grid-template-columns: 1fr;
+    }
+    @media (min-width: 900px){
+      .grid { grid-template-columns: 1.2fr .8fr; }
+    }
+    section {
+      border: 1px solid rgba(127,127,127,.25);
+      border-radius: 12px;
+      padding: 16px;
+    }
+    ul {
+      margin: 0;
+      padding-left: 18px;
+    }
+    li { margin: 8px 0; }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(127,127,127,.25);
+      font-size: 12px;
+      text-decoration: none;
+    }
+    .pillbox {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    button {
+      background: none;
+      color: inherit;
+    }
   </style>
 </head>
 
@@ -45,133 +84,72 @@
       <h1>Sidenote</h1>
       <div class="muted" id="last-updated">Loading…</div>
     </header>
-    
-    <!-- =========================
-     Search UI (Top only)
-     ========================= -->
-<section aria-labelledby="search-title" style="margin-bottom:18px;">
-  <h2 id="search-title" style="font-size:16px; margin-bottom:8px;">
-    検索
-  </h2>
 
-  <!-- フリーワード -->
-  <input
-    type="search"
-    id="search-input"
-    placeholder="キーワード（タイトル・タグ・カテゴリ）"
-    autocomplete="off"
-    style="
-      width:100%;
-      box-sizing:border-box;
-      padding:10px 12px;
-      border-radius:8px;
-      border:1px solid rgba(127,127,127,.3);
-      font-size:14px;
-    "
-  />
+    <!-- 検索UI -->
+    <section aria-labelledby="search-title" style="margin-bottom:18px;">
+      <h2 id="search-title">検索</h2>
 
-  <!-- タグ（JSで差し込み） -->
-  <div
-    id="search-tags"
-    style="
-      display:flex;
-      flex-wrap:wrap;
-      gap:8px;
-      margin-top:10px;
-    "
-  >
-    <!-- JSでタグpillを生成 -->
-  </div>
+      <input
+        type="search"
+        id="search-input"
+        placeholder="キーワード（タイトル・タグ・カテゴリ）"
+        autocomplete="off"
+        style="
+          width:100%;
+          box-sizing:border-box;
+          padding:10px 12px;
+          border-radius:8px;
+          border:1px solid rgba(127,127,127,.3);
+          font-size:14px;
+        "
+      />
 
-  <!-- 検索結果 -->
-  <div
-    id="search-results"
-    style="margin-top:14px;"
-  >
-    <!-- JSで検索結果を描画 -->
-  </div>
-</section>
+      <div id="search-tags" class="pillbox" style="margin-top:10px;"></div>
+
+      <div id="search-results" style="margin-top:14px;"></div>
+    </section>
 
     <div class="grid">
-      <!-- 左：新着 -->
+      <!-- 新着 -->
       <section aria-labelledby="recent-title">
-        <h2 id="recent-title">新着</h2>
+        <h2 id="recent-title">記事一覧（新着）</h2>
         <div class="muted" style="margin-bottom:10px;">
-          最新 <span id="recent-count">5</span> 件を表示
+          最新 <span id="recent-count">5</span> 件
         </div>
 
-        <ul class="list" id="recent-list">
-          <!-- JSで差し込み -->
-        </ul>
+        <ul id="recent-list"></ul>
 
-        <div id="recent-error" class="muted error" style="display:none; margin-top:10px;"></div>
+        <button
+          id="btn-load-more"
+          type="button"
+          style="
+            margin-top:12px;
+            padding:10px 12px;
+            border-radius:10px;
+            border:1px solid rgba(127,127,127,.25);
+            cursor:pointer;
+            font-size:13px;
+          "
+        >
+          もっと見る
+        </button>
+
+        <div id="recent-error" class="muted" style="display:none; margin-top:10px;"></div>
       </section>
 
-      <!-- 右：導線 -->
-      <section aria-labelledby="nav-title">
-        <h2 id="nav-title">探す</h2>
+      <!-- サイド情報 -->
+      <section>
+        <h2>分類</h2>
 
-        <div class="muted" style="margin: 10px 0 6px;">ジャンル</div>
-        <div class="pillbox" id="genre-links">
-          <!-- JSで差し込み（静的リンクを置いてもOK） -->
-        </div>
+        <div class="muted" style="margin:10px 0 6px;">ジャンル</div>
+        <div id="genre-links" class="pillbox"></div>
 
-        <div class="muted" style="margin: 14px 0 6px;">カテゴリ</div>
-        <div class="pillbox" id="category-links">
-          <!-- JSで差し込み（静的リンクを置いてもOK） -->
-        </div>
-
-        <footer>
-          <div>※ トップは軽量表示（全件は出さない）</div>
-        </footer>
+        <div class="muted" style="margin:14px 0 6px;">カテゴリ</div>
+        <div id="category-links" class="pillbox"></div>
       </section>
     </div>
   </div>
 
-  <!-- 共通JS（次で一緒に作ります） -->
-  <script>
-    // いったんHTML単体でも「壊れない」ように、最低限のプレースホルダだけ入れておく
-    (function bootstrapPlaceholders(){
-      const recent = document.getElementById("recent-list");
-      if (recent && !recent.children.length) {
-        const li = document.createElement("li");
-        li.className = "muted";
-        li.textContent = "（JS未設定）次のステップで新着一覧を描画します";
-        recent.appendChild(li);
-      }
-      const genre = document.getElementById("genre-links");
-      const cat = document.getElementById("category-links");
-
-      // 静的リンクの例（後でJSで自動生成に置き換え可能）
-      const sampleGenres = [
-        { key: "dev", label: "開発", href: "./genre/dev/" },
-        { key: "automation", label: "自動化", href: "./genre/automation/" },
-        { key: "finance", label: "投資", href: "./genre/finance/" }
-      ];
-      const sampleCats = [
-        { key: "github-pages", label: "GitHub Pages", href: "./category/github-pages/" },
-        { key: "gas", label: "GAS", href: "./category/gas/" },
-        { key: "notion", label: "Notion", href: "./category/notion/" }
-      ];
-
-      function addPills(el, items){
-        if (!el) return;
-        items.forEach(it => {
-          const a = document.createElement("a");
-          a.className = "pill";
-          a.href = it.href;
-          a.textContent = it.label;
-          el.appendChild(a);
-        });
-      }
-      if (genre && !genre.children.length) addPills(genre, sampleGenres);
-      if (cat && !cat.children.length) addPills(cat, sampleCats);
-
-      document.getElementById("last-updated").textContent = "Top / index.html";
-    })();
-  </script>
-
-  <!-- 次のステップで作る： data/index.json を読んで新着/リンクを自動生成 -->
-  <!-- <script defer src="./assets/app.js"></script> -->
+  <script defer src="./assets/app.js"></script>
 </body>
 </html>
